@@ -1,0 +1,32 @@
+# === Python ===
+**/__pycache__/
+*.py[cod]
+*$py.class
+
+# === Herramientas de Desarrollo (VS Code & PlatformIO) ===
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+.pio/
+.pioenvs/
+.piolibdeps/
+.clangd/
+
+# === Archivos de Configuración y Locks ===
+# Ignora archivos .lock y .toml en cualquier nivel del proyecto
+**/*.lock
+**/*.toml
+
+# === Archivos Específicos del Proyecto ===
+*.gbl
+# Ignora archivos Markdown específicamente dentro de la carpeta analysis
+analysis/*.md
+web-ui/*.md
+
+
+# === Sistema y Temporales ===
+.DS_Store
+Thumbs.db
+*.bak
+*.tmp
+*.log

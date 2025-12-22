@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{{ url_for('static', path='index.css')}}" rel="stylesheet">
+    <!-- Carga de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Carga de Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Battery Stress Test</title>
+    <script type="importmap">
+        { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.158.0/examples/jsm/" } }
+    </script>
+
+    <style>
+        @font-face {
+            font-family: "SuiGeneris";
+            src: url("{{ url_for('static', path='fonts/SuiGeneris.otf') }}") format("opentype");
+        }
+
+        .font-sui {
+            font-family: "SuiGeneris", sans-serif;
+        }
+
+        /* Estilo para que los canvas de Chart.js llenen su contenedor */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            /* 'height: 100%' fue eliminado. Dejamos que Flexbox controle la altura. */
+        }
+    </style>
+</head>
+
+<body class="bg-neutral-900 min-h-screen flex flex-col text-white font-sans">
+
+    <header class="w-full flex-shrink-0 flex flex-row text-[#D7FF41] justify-between px-6 sm:px-12 py-5 items-center">
+        <div class="flex flex-col items-center">
+            <img src="{{ url_for('static', path='img/driver-green.png') }}" alt="Logo" class="h-12 sm:h-16">
+        </div>
+        <h1 class="text-xl md:text-2xl font-bold font-sui text-center">Battery Stress Test</h1>
+        <div class="w-12 sm:w-16"></div>
+    </header>
+
+    <main class="w-full flex-grow flex flex-col lg:flex-row items-stretch p-4 sm:p-6 lg:p-8 gap-8">
+
+        <!-- Columna Izquierda (3D) -->
+        <div class="flex flex-col w-full lg:w-1/2 bg-neutral-800 rounded-lg p-4 shadow-lg">
+            <h2 class="font-bold text-xl mb-4 font-sui px-2">Visualización de Temperatura 3D</h2>
+            <div class="relative flex-grow w-full min-h-[350px] sm:min-h-[450px]" id="plot-container">
+                <div class="colorbar-container">
+                    <div class="colorbar-title">Temp (°C)</div>
+                    <div class="colorbar-labels"><span>100</span><span>60</span><span>20</span></div>
+                </div>
+                <div id="tooltip"></div>
+            </div>
+        </div>
+
+        <!-- Columna Derecha (Gráficos) -->
+        <div class="flex flex-col w-full lg:w-1/2 bg-neutral-800 rounded-lg p-4 shadow-lg">
+
+            <!-- Contenedor wrapper para los gráficos y valores, para controlar el overflow -->
+            <div class="flex flex-col h-full">
+
+                <!-- 1. NUEVO GRÁFICO DE LÍNEAS (SENSORES) -->
+                <!-- CAMBIO: 'min-h-[...]' reemplazado por 'h-0'. Esto es clave para Flexbox. -->
+                <div class="chart-container flex-1 h-0">
+                    <canvas id="line-chart-sensors"></canvas>
+                </div>
+
+                <!-- 2. GRÁFICO DE ÁREA APILADA (EXISTENTE) -->
+                <!-- CAMBIO: 'min-h-[...]' reemplazado por 'h-0'. -->
+                <div class="chart-container flex-1 h-0 mt-4">
+                    <canvas id="stacked-area"></canvas>
+                </div>
+
+                <!-- 3. VALORES ELÉCTRICOS (EXISTENTES) -->
+                <!-- 'flex-shrink-0' evita que este div se encoja -->
+                <div class="w-full flex-shrink-0 pt-4 font-sui">
+                    <h2 class="text-white font-bold text-md mb-2">Valores Eléctricos</h2>
+                    <ul class="space-y-1 text-sm sm:text-base">
+                        <li>
+                            <span class="text-[#D7FF41] text-sm">Voltage: </span>
+                            <span id="voltage" class="text-sm">--</span> V
+                        </li>
+                        <li>
+                            <span class="text-[#D7FF41] text-sm">Amperage: </span>
+                            <span id="amperage" class="text-sm">--</span> A
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Carga de Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{{ url_for('static', path='scripts/websocket.js') }}"></script>
+    <script type="module" src="{{ url_for('static', path='scripts/temp-chart.js') }}"></script>
+    <script src="{{ url_for('static', path='scripts/stackedArea-chart.js') }}"></script>
+
+    <!-- CARGA DEL NUEVO SCRIPT DEL GRÁFICO DE LÍNEAS -->
+    <script src="{{ url_for('static', path='scripts/line-chart.js') }}"></script>
+</body>
+
+</html>
